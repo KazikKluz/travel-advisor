@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CssBaseline, Grid } from '@material-ui/core';
 
-import { getPlacesData } from './api/index';
+import { getPlacesData, getWeatherData } from './api/index';
 
 import Header from './components/header/header.component';
 import List from './components/list/list.component';
@@ -9,6 +9,7 @@ import Map from './components/map/map.component';
 
 const App = () => {
   const [places, setPlaces] = useState([]);
+  const [weatherData, setWeatherData] = useState([]);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [coordinates, setCoordinates] = useState({});
   const [bounds, setBounds] = useState({});
@@ -36,7 +37,14 @@ const App = () => {
   useEffect(() => {
     //if we have set bounds only
     if (bounds.sw && bounds.ne) {
+      //to display spinner
       setIsLoading(true);
+
+      //get weather data by passing location points
+      getWeatherData(coordinates.lat, coordinates.lng).then((data) =>
+        setWeatherData(data)
+      );
+
       getPlacesData(type, bounds.sw, bounds.ne).then((data) => {
         //when the function returns Promise set places value as data
         //and filter out places without a name and reviews
@@ -73,6 +81,7 @@ const App = () => {
             //if we have filtered places use them otherwise use places
             places={filteredPlaces.length ? filteredPlaces : places}
             setChildClicked={setChildClicked}
+            weatherData={weatherData}
           />
         </Grid>
       </Grid>
