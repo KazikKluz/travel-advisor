@@ -23,7 +23,6 @@ const App = () => {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
-        console.log(latitude, longitude);
         setCoordinates({ lat: latitude, lng: longitude });
       }
     );
